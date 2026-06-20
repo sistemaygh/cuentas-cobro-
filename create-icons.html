@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Generar íconos PWA</title>
+<style>body{font-family:sans-serif;padding:20px;max-width:500px;margin:auto;color:#333}</style>
+</head>
+<body>
+<h2>Generador de íconos PWA</h2>
+<p>Abre este archivo en Chrome. Los íconos se descargarán automáticamente.</p>
+<p>Luego mueve los archivos descargados a la carpeta <code>public/icons/</code></p>
+<canvas id="c" style="border:1px solid #ccc;display:block;margin:20px 0"></canvas>
+<div id="msg" style="color:green;font-weight:bold"></div>
+<script>
+const canvas = document.getElementById('c')
+const ctx = canvas.getContext('2d')
+const sizes = [192, 512]
+
+function drawIcon(size) {
+  canvas.width = size
+  canvas.height = size
+  const r = size * 0.22
+  // Fondo azul oscuro con bordes redondeados
+  ctx.fillStyle = '#1e3a5f'
+  roundRect(ctx, 0, 0, size, size, size * 0.22)
+  ctx.fill()
+  // Papel blanco (documento)
+  ctx.fillStyle = '#ffffff'
+  roundRect(ctx, size*0.25, size*0.18, size*0.5, size*0.66, size*0.06)
+  ctx.fill()
+  // Líneas del documento
+  ctx.fillStyle = 'rgba(30,58,95,0.2)'
+  ctx.fillRect(size*0.35, size*0.30, size*0.30, size*0.03)
+  ctx.fillRect(size*0.35, size*0.38, size*0.22, size*0.03)
+  ctx.fillRect(size*0.35, size*0.46, size*0.16, size*0.03)
+  // Círculo verde con $
+  ctx.fillStyle = '#1e3a5f'
+  ctx.beginPath()
+  ctx.arc(size*0.50, size*0.63, size*0.13, 0, Math.PI*2)
+  ctx.fill()
+  ctx.fillStyle = '#ffffff'
+  ctx.font = `bold ${size*0.16}px Arial`
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  ctx.fillText('$', size*0.50, size*0.635)
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath()
+  ctx.moveTo(x + r, y)
+  ctx.lineTo(x + w - r, y)
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r)
+  ctx.lineTo(x + w, y + h - r)
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h)
+  ctx.lineTo(x + r, y + h)
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r)
+  ctx.lineTo(x, y + r)
+  ctx.quadraticCurveTo(x, y, x + r, y)
+  ctx.closePath()
+}
+
+setTimeout(() => {
+  sizes.forEach((size, i) => {
+    setTimeout(() => {
+      drawIcon(size)
+      const link = document.createElement('a')
+      link.download = `icon-${size}.png`
+      link.href = canvas.toDataURL('image/png')
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      if (i === sizes.length - 1) {
+        document.getElementById('msg').textContent = '✓ Íconos generados. Muévelos a public/icons/'
+      }
+    }, i * 300)
+  })
+}, 500)
+</script>
+</body>
+</html>

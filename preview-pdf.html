@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Preview Cuenta de Cobro — YGH</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0f172a; font-family: -apple-system, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 24px; }
+  h1 { color: white; margin: 0 0 6px; font-size: 20px; }
+  .sub { color: #64748b; font-size: 13px; margin: 0 0 20px; }
+  .card { background: #1e293b; border-radius: 16px; padding: 20px; width: 100%; max-width: 560px; margin-bottom: 16px; }
+  .card h2 { color: #93c5fd; font-size: 13px; font-weight: 600; margin: 0 0 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .logo-drop { border: 2px dashed #334155; border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: border-color .2s; position: relative; }
+  .logo-drop:hover { border-color: #3b82f6; }
+  .logo-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .logo-drop p { color: #475569; font-size: 13px; margin: 8px 0 0; }
+  .logo-preview { max-height: 80px; object-fit: contain; border-radius: 8px; display: none; }
+  .logo-ok { color: #34d399; font-size: 13px; margin: 8px 0 0; display: none; }
+  label { display: block; color: #94a3b8; font-size: 12px; margin-bottom: 4px; }
+  input[type=text], input[type=number], select, textarea {
+    width: 100%; background: #0f172a; border: 1px solid #334155; color: white;
+    border-radius: 8px; padding: 10px 12px; font-size: 14px; outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: #3b82f6; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 60px; gap: 10px; }
+  .field { margin-bottom: 10px; }
+  .toggle-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .toggle-btn { flex: 1; padding: 9px; border: 1px solid #334155; background: #0f172a; color: #64748b; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all .15s; }
+  .toggle-btn.active { background: #1e3a5f; color: white; border-color: #3b82f6; }
+  .btn-gen { background: #1e3a5f; color: white; border: none; padding: 14px 36px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; max-width: 560px; margin-bottom: 16px; transition: background .2s; }
+  .btn-gen:hover { background: #1d4ed8; }
+  .btn-gen:disabled { background: #334155; cursor: default; }
+  iframe { width: 100%; max-width: 900px; height: 85vh; border: none; border-radius: 12px; box-shadow: 0 25px 60px rgba(0,0,0,.6); display: none; }
+  .section-title { color: #475569; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin: 0 0 8px; }
+  .check-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .check-row label { margin: 0; color: #94a3b8; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>Preview — Cuenta de Cobro</h1>
+<p class="sub">Sube el logo real y verás exactamente cómo quedará el PDF</p>
+
+<!-- ── LOGO ── -->
+<div class="card">
+  <h2>Logo de Yesenia</h2>
+  <div class="logo-drop" id="logoDrop">
+    <input type="file" accept="image/*" id="logoFile" onchange="cargarLogo(this)">
+    <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="#475569" stroke-width="1.5">
+      <path stroke-linecap="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+    </svg>
+    <p>Haz clic o arrastra el logo aquí<br><span style="color:#334155;font-size:11px">PNG, JPG, SVG</span></p>
+  </div>
+  <img id="logoPreview" class="logo-preview" alt="Logo preview" style="margin-top:10px;width:100%">
+  <p class="logo-ok" id="logoOk">✓ Logo cargado correctamente</p>
+</div>
+
+<!-- ── DATOS CONTADORA ── -->
+<div class="card">
+  <h2>Datos de la contadora</h2>
+  <div class="field">
+    <label>Nombre completo</label>
+    <input type="text" id="cNombre" value="YESENIA GOMEZ HERNANDEZ">
+  </div>
+  <div class="toggle-row">
+    <button class="toggle-btn active" id="btnCC" onclick="setTipoDoc('cc')">C.C.</button>
+    <button class="toggle-btn" id="btnNIT" onclick="setTipoDoc('nit')">NIT</button>
+  </div>
+  <div class="row3 field">
+    <div style="grid-column:1/3"><label>Número</label><input type="text" id="cNit" value="52.729.494"></div>
+    <div><label>DV</label><input type="text" id="cDv" value="4"></div>
+  </div>
+  <div class="row field">
+    <div><label>Teléfono</label><input type="text" id="cTel" value="3105623661"></div>
+    <div><label>Ciudad</label><input type="text" id="cCiudad" value="BOGOTA"></div>
+  </div>
+  <div class="field">
+    <label>Dirección</label>
+    <input type="text" id="cDir" value="CRA 5 22C 12 SUR">
+  </div>
+  <div class="row field">
+    <div><label>Banco</label><input type="text" id="cBanco" value="Bancolombia"></div>
+    <div><label>No. Cuenta</label><input type="text" id="cCuenta" value="42854894718"></div>
+  </div>
+  <div class="toggle-row">
+    <button class="toggle-btn active" id="btnAhorros" onclick="setTipoCuenta('ahorros')">Ahorros</button>
+    <button class="toggle-btn" id="btnCorriente" onclick="setTipoCuenta('corriente')">Corriente</button>
+  </div>
+  <div class="field">
+    <label>Declaración tributaria</label>
+    <textarea id="cDecl" rows="4" style="resize:none;font-size:12px">Para efectos tributarios declaro:
+Soy persona residente nacional, régimen simplificado.
+Declaro impuesto de renta y complementarios por patrimonio.
+No tengo empleados a mi cargo.</textarea>
+  </div>
+</div>
+
+<!-- ── DATOS CUENTA ── -->
+<div class="card">
+  <h2>Cuenta de cobro</h2>
+  <div class="row field">
+    <div><label>No. Cuenta</label><input type="text" id="cNum" value="0001"></div>
+    <div><label>Fecha</label><input type="text" id="cFecha" value="19/06/2026"></div>
+  </div>
+  <div class="field">
+    <label>Nombre cliente / empresa</label>
+    <input type="text" id="clNombre" value="EDIFICIO AVALON">
+  </div>
+  <div class="toggle-row">
+    <button class="toggle-btn" id="btnClCC" onclick="setTipoDocCl('cc')">C.C.</button>
+    <button class="toggle-btn active" id="btnClNIT" onclick="setTipoDocCl('nit')">NIT</button>
+  </div>
+  <div class="row3 field">
+    <div style="grid-column:1/3"><label>NIT / CC</label><input type="text" id="clNit" value="800.245.101"></div>
+    <div><label>DV</label><input type="text" id="clDv" value="1"></div>
+  </div>
+  <div class="row field">
+    <div><label>Dirección</label><input type="text" id="clDir" value="CALLE 65 9 07"></div>
+    <div><label>Ciudad</label><input type="text" id="clCiudad" value="Bogotá"></div>
+  </div>
+  <div class="field">
+    <label>Concepto</label>
+    <input type="text" id="cConcepto" value="Honorarios de Contador durante mes de Junio 2026">
+  </div>
+  <div class="row field">
+    <div><label>Valor honorarios</label><input type="number" id="cValor" value="451000"></div>
+    <div><label>% Retención</label>
+      <select id="cRetPct">
+        <option value="0">Sin retención</option>
+        <option value="11">11%</option>
+        <option value="10" selected>10%</option>
+        <option value="3.5">3.5%</option>
+        <option value="2">2%</option>
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <label>IVA</label>
+    <select id="cIvaPct">
+      <option value="0" selected>Sin IVA</option>
+      <option value="19">19%</option>
+      <option value="5">5%</option>
+    </select>
+  </div>
+</div>
+
+<button class="btn-gen" id="btnGen" onclick="generar()">Generar PDF</button>
+<iframe id="frame"></iframe>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+let logoDataUrl = null
+let tipoDoc = 'cc'
+let tipoDocCl = 'nit'
+let tipoCuenta = 'ahorros'
+
+function setTipoDoc(t) {
+  tipoDoc = t
+  document.getElementById('btnCC').className = 'toggle-btn' + (t==='cc'?' active':'')
+  document.getElementById('btnNIT').className = 'toggle-btn' + (t==='nit'?' active':'')
+}
+function setTipoDocCl(t) {
+  tipoDocCl = t
+  document.getElementById('btnClCC').className = 'toggle-btn' + (t==='cc'?' active':'')
+  document.getElementById('btnClNIT').className = 'toggle-btn' + (t==='nit'?' active':'')
+}
+function setTipoCuenta(t) {
+  tipoCuenta = t
+  document.getElementById('btnAhorros').className = 'toggle-btn' + (t==='ahorros'?' active':'')
+  document.getElementById('btnCorriente').className = 'toggle-btn' + (t==='corriente'?' active':'')
+}
+
+function cargarLogo(input) {
+  const file = input.files[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const img = new Image()
+    img.onload = () => {
+      const MAX_W = 500, MAX_H = 150
+      let w = img.width, h = img.height
+      if (w > MAX_W) { h = h * MAX_W / w; w = MAX_W }
+      if (h > MAX_H) { w = w * MAX_H / h; h = MAX_H }
+      const c = document.createElement('canvas')
+      c.width = w; c.height = h
+      c.getContext('2d').drawImage(img, 0, 0, w, h)
+      logoDataUrl = c.toDataURL('image/png', 0.92)
+      document.getElementById('logoPreview').src = logoDataUrl
+      document.getElementById('logoPreview').style.display = 'block'
+      document.getElementById('logoOk').style.display = 'block'
+    }
+    img.src = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
+// Drag & drop
+const drop = document.getElementById('logoDrop')
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.style.borderColor = '#3b82f6' })
+drop.addEventListener('dragleave', () => { drop.style.borderColor = '#334155' })
+drop.addEventListener('drop', e => {
+  e.preventDefault(); drop.style.borderColor = '#334155'
+  const f = e.dataTransfer.files[0]
+  if (f && f.type.startsWith('image/')) {
+    document.getElementById('logoFile').files = e.dataTransfer.files
+    cargarLogo({ files: [f] })
+  }
+})
+
+// ── Número a letras ──
+function numeroALetras(valor) {
+  const n = Math.round(Math.abs(valor||0))
+  if (n===0) return 'CERO PESOS M/CTE'
+  const U=['','UN','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE']
+  const D=['','','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA']
+  const C=['','CIEN','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS']
+  function c3(x){if(!x)return'';if(x<20)return U[x];if(x<100){const d=Math.floor(x/10),u=x%10;if(d===2&&u)return'VEINTI'+U[u];return u?D[d]+' Y '+U[u]:D[d]}const c=Math.floor(x/100),r=x%100;const cs=(c===1&&r)?'CIENTO':C[c];return r?cs+' '+c3(r):cs}
+  const mill=Math.floor(n/1e6),rm=n%1e6,miles=Math.floor(rm/1000),resto=rm%1000
+  let res=''
+  if(mill) res+=(mill===1?'UN MILLÓN':c3(mill)+' MILLONES')+' '
+  if(miles) res+=(miles===1?'MIL':c3(miles)+' MIL')+' '
+  if(resto) res+=c3(resto)
+  return res.trim()+' PESOS M/CTE'
+}
+function fv(n){return new Intl.NumberFormat('es-CO').format(Math.round(n||0))}
+
+function generar() {
+  const { jsPDF } = window.jspdf
+  const doc = new jsPDF('p','mm','a4')
+  const W=210, m=11, cW=W-m*2
+  const NAVY=[30,58,95],LGRAY=[232,235,240],WHITE=[255,255,255],DARK=[15,15,15],MGRAY=[180,180,180]
+  const cc0=m,cc1=m+82,cc2=m+92,cc3=m+102,cc4=m+168
+
+  // Leer campos
+  const valor = parseFloat(document.getElementById('cValor').value)||0
+  const retPct = parseFloat(document.getElementById('cRetPct').value)||0
+  const ivaPct = parseFloat(document.getElementById('cIvaPct').value)||0
+  const retencion = retPct ? Math.round(valor*(retPct/100)) : 0
+  const iva = ivaPct ? Math.round(valor*(ivaPct/100)) : 0
+  const total = valor - retencion + iva
+
+  const config = {
+    nombre: document.getElementById('cNombre').value,
+    tipoDoc, nit: document.getElementById('cNit').value, dv: document.getElementById('cDv').value,
+    direccion: document.getElementById('cDir').value, telefono: document.getElementById('cTel').value,
+    ciudad: document.getElementById('cCiudad').value, banco: document.getElementById('cBanco').value,
+    cuentaBancaria: document.getElementById('cCuenta').value, tipoCuenta,
+    declaracion: document.getElementById('cDecl').value
+  }
+  const cuenta = {
+    numero: document.getElementById('cNum').value,
+    fecha: document.getElementById('cFecha').value,
+    clienteNombre: document.getElementById('clNombre').value,
+    clienteTipoDoc: tipoDocCl, clienteNit: document.getElementById('clNit').value,
+    clienteDv: document.getElementById('clDv').value,
+    clienteDireccion: document.getElementById('clDir').value,
+    clienteCiudad: document.getElementById('clCiudad').value,
+    clienteTelefono: '', concepto: document.getElementById('cConcepto').value,
+    valor, retencion, retencionPorcentaje: retPct, iva, ivaPorcentaje: ivaPct, total
+  }
+
+  let y = m
+
+  // Logo + Título
+  if (logoDataUrl) {
+    try { doc.addImage(logoDataUrl,'PNG',m,y,70,22) } catch {}
+  }
+  doc.setFontSize(16);doc.setFont('helvetica','bold');doc.setTextColor(...NAVY)
+  doc.text('CUENTA DE COBRO',W-m,y+9,{align:'right'})
+  doc.setFontSize(11);doc.text(`No. ${cuenta.numero}`,W-m,y+16,{align:'right'})
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(80,80,80)
+  doc.text(`Fecha: ${cuenta.fecha}`,W-m,y+22,{align:'right'})
+  y+=24
+
+  function sh(t,yp){doc.setFillColor(...NAVY);doc.rect(m,yp,cW,6.5,'F');doc.setTextColor(...WHITE);doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text(t,m+2,yp+4.5);return yp+6.5}
+  function gh(yp){doc.setFillColor(...LGRAY);doc.setDrawColor(...MGRAY);doc.rect(m,yp,cW,5.5,'FD');[cc1,cc2,cc3,cc4].forEach(x=>doc.line(x,yp,x,yp+5.5));doc.setTextColor(...DARK);doc.setFontSize(6.5);doc.setFont('helvetica','bold');doc.text('Nombre',cc0+1.5,yp+3.8);doc.text('C.C.',cc1+2,yp+3.8);doc.text('NIT',cc2+2,yp+3.8);doc.text('No. DE IDENTIFICACION',cc3+2,yp+3.8);doc.text('DV',cc4+2,yp+3.8);return yp+5.5}
+  function dr(nom,tipo,id,dv,yp){const rH=8;doc.setFillColor(...WHITE);doc.setDrawColor(...MGRAY);doc.rect(m,yp,cW,rH,'FD');[cc1,cc2,cc3,cc4].forEach(x=>doc.line(x,yp,x,yp+rH));doc.setTextColor(...DARK);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text((doc.splitTextToSize(nom||'',cc1-cc0-3)[0])||'',cc0+1.5,yp+5.5);doc.setFont('helvetica','normal');doc.setFontSize(9);if(tipo==='cc')doc.text('X',cc1+3.5,yp+5.5);else doc.text('X',cc2+3.5,yp+5.5);doc.text(id||'',cc3+2,yp+5.5);doc.text(dv||'',cc4+2,yp+5.5);return yp+rH}
+  function ar(dir,tel,ciu,yp){const rH=9,m1=m+74,m2=m+130;doc.setFillColor(...WHITE);doc.setDrawColor(...MGRAY);doc.rect(m,yp,cW,rH,'FD');doc.line(m1,yp,m1,yp+rH);doc.line(m2,yp,m2,yp+rH);doc.setFontSize(6.5);doc.setFont('helvetica','bold');doc.setTextColor(110,110,110);doc.text('Dirección',m+1.5,yp+3.5);doc.text('Teléfono',m1+1.5,yp+3.5);doc.text('Ciudad',m2+1.5,yp+3.5);doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(...DARK);doc.text((doc.splitTextToSize(dir||'',m1-m-3)[0])||'',m+1.5,yp+7.8);doc.text(tel||'',m1+1.5,yp+7.8);doc.text(ciu||'',m2+1.5,yp+7.8);return yp+rH}
+
+  y=sh('INFORMACIÓN DE LA PERSONA NATURAL (Vendedor o Prestador de Servicio)',y)
+  y=gh(y);y=dr(config.nombre,config.tipoDoc,config.nit,config.dv,y);y=ar(config.direccion,config.telefono,config.ciudad,y);y+=2
+  y=sh('INFORMACIÓN DEL COMPRADOR',y)
+  y=gh(y);y=dr(cuenta.clienteNombre,cuenta.clienteTipoDoc,cuenta.clienteNit,cuenta.clienteDv,y);y=ar(cuenta.clienteDireccion,cuenta.clienteTelefono,cuenta.clienteCiudad,y);y+=2
+
+  const vCW=48,cCW=cW-vCW
+  doc.setFillColor(...NAVY);doc.rect(m,y,cCW,6.5,'F');doc.rect(m+cCW,y,vCW,6.5,'F')
+  doc.setTextColor(...WHITE);doc.setFontSize(8);doc.setFont('helvetica','bold')
+  doc.text('CONCEPTO',m+2,y+4.5);doc.text('VALOR',m+cCW+vCW/2,y+4.5,{align:'center'});y+=6.5
+
+  function cr(txt,val,bg,yp,neg){const lines=doc.splitTextToSize(txt||'',cCW-4);const rH=Math.max(8,lines.length*5+3);doc.setFillColor(...(bg||WHITE));doc.setDrawColor(...MGRAY);doc.rect(m,yp,cCW,rH,'FD');doc.rect(m+cCW,yp,vCW,rH,'FD');doc.setTextColor(neg?155:20,20,20);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.text(lines,m+2,yp+5.5);doc.setFont('helvetica',neg?'bold':'normal');doc.setTextColor(neg?150:20,neg?30:20,neg?30:20);doc.text(val,W-m-2,yp+rH/2+2,{align:'right'});doc.setTextColor(...DARK);return yp+rH}
+
+  y=cr(cuenta.concepto,fv(valor),WHITE,y,false)
+  if(retencion>0) y=cr(`Honorarios ${retPct}%`,`-${fv(retencion)}`,[255,248,248],y,true)
+  if(iva>0) y=cr(`IVA ${ivaPct}%`,fv(iva),WHITE,y,false)
+  const bancoTxt=`Favor consignar a la cuenta de ${config.tipoCuenta} ${config.banco} ${config.cuentaBancaria}`.trim()
+  y=cr(bancoTxt,fv(total),[245,248,252],y,false)
+  y+=3
+
+  doc.setFontSize(8.5);doc.setFont('helvetica','normal');doc.setTextColor(55,55,55)
+  config.declaracion.split('\n').forEach((l,i)=>doc.text(l,m,y+i*4.5))
+  y+=config.declaracion.split('\n').length*4.5+6
+
+  const fy=y
+  doc.setFontSize(7.5);doc.setFont('helvetica','bold');doc.setTextColor(...DARK)
+  doc.text('FIRMA VENDEDOR O PRESTADOR DEL SERVICIO',m,fy)
+  doc.setDrawColor(120,120,120);doc.line(m,fy+15,m+90,fy+15)
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(config.nombre,m,fy+19)
+  doc.text(`C.C./NIT: ${config.nit}`,m,fy+24)
+
+  const tx=W-m-72,tw=72,th=9
+  doc.setFillColor(...LGRAY);doc.setDrawColor(...MGRAY);doc.rect(tx,fy-2,tw,th,'FD');doc.line(tx+38,fy-2,tx+38,fy+th-2)
+  doc.setFontSize(9);doc.setFont('helvetica','bold');doc.setTextColor(...DARK)
+  doc.text('TOTAL',tx+2,fy+4);doc.text(fv(total),tx+tw-2,fy+4,{align:'right'})
+  doc.setFillColor(...WHITE);doc.rect(tx,fy+th-2,tw,th,'FD');doc.line(tx+38,fy+th-2,tx+38,fy+th*2-2)
+  doc.text('NETO A PAGAR',tx+2,fy+th+5);doc.text(fv(total),tx+tw-2,fy+th+5,{align:'right'})
+
+  doc.setFontSize(8.5);doc.setFont('helvetica','bold');doc.setTextColor(40,40,40)
+  doc.text(`Son: ${numeroALetras(total)}`,m,fy+26)
+
+  const blob=doc.output('blob')
+  const frame=document.getElementById('frame')
+  frame.src=URL.createObjectURL(blob)
+  frame.style.display='block'
+  frame.scrollIntoView({behavior:'smooth'})
+}
+</script>
+</body>
+</html>
