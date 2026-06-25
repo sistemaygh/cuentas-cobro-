@@ -10,7 +10,7 @@ import Ajustes from './pages/Ajustes'
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/cuentas-cobro-">
       <Toaster
         position="top-center"
         toastOptions={{

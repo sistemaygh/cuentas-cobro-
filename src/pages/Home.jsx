@@ -20,13 +20,12 @@ export default function Home() {
     <div className="flex flex-col min-h-full">
       {/* Header */}
       <div className="bg-blue-900 text-white px-5 pt-12 pb-8">
-        {config?.logo ? (
-          <img src={config.logo} alt="Logo" className="h-14 object-contain mb-3 rounded-lg bg-white/10 p-1" />
-        ) : (
-          <h1 className="text-xl font-bold mb-1">
-            {config?.nombre || 'Cuentas de Cobro'}
-          </h1>
-        )}
+        <div className="flex items-center gap-3 mb-3">
+          {config?.logo && (
+            <img src={config.logo} alt="Logo" className="h-14 object-contain rounded-lg bg-white/10 p-1" />
+          )}
+          <h1 className="text-xl font-bold">Sistema YGH</h1>
+        </div>
         <p className="text-blue-200 text-sm capitalize">{fecha}</p>
 
         {/* Stats */}

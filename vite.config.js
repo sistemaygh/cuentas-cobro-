@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/cuentas-cobro-/',
   plugins: [
     react(),
     tailwindcss(),
@@ -12,15 +13,15 @@ export default defineConfig({
       devOptions: { enabled: true },
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Cuentas de Cobro',
-        short_name: 'Cuentas',
-        description: 'Sistema de cuentas de cobro profesional',
+        name: 'Sistema YGH',
+        short_name: 'Sistema YGH',
+        description: 'Sistema de cuentas de cobro - Yesenia Gomez Hernandez',
         theme_color: '#1e3a5f',
         background_color: '#ffffff',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        scope: '/cuentas-cobro-/',
+        start_url: '/cuentas-cobro-/',
         icons: [
           {
             src: '/icons/icon-192.png',
