@@ -4,7 +4,7 @@ import { FileText, Filter } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useCuentas } from '../hooks/useCuentas'
 import { useConfig } from '../hooks/useConfig'
-import { cambiarEstado } from '../firebase/cuentas'
+import { cambiarEstado, eliminarCuenta } from '../firebase/cuentas'
 import { generarPDF } from '../utils/generarPDF'
 import { abrirWhatsApp } from '../utils/whatsapp'
 import { formatCOP } from '../utils/formatters'
@@ -66,6 +66,16 @@ export default function Historial() {
   function handleWhatsApp(cuenta) {
     if (!cuenta.clienteTelefono) return toast.error('Sin número de WhatsApp')
     abrirWhatsApp(cuenta, cuenta.clienteTelefono)
+  }
+
+  async function handleEliminar(cuenta) {
+    if (!window.confirm(`¿Eliminar la cuenta #${cuenta.numero} de ${cuenta.clienteNombre}?`)) return
+    try {
+      await eliminarCuenta(cuenta.id)
+      toast.success('Cuenta eliminada')
+    } catch {
+      toast.error('Error al eliminar')
+    }
   }
 
   const estados = ['todos', 'pendiente', 'enviada', 'pagada']
@@ -157,6 +167,7 @@ export default function Historial() {
                 onWhatsApp={handleWhatsApp}
                 onCambiarEstado={handleEstado}
                 onVerDetalle={() => navigate(`/nueva-cuenta/${c.id}`)}
+                onEliminar={handleEliminar}
               />
             ))}
           </div>

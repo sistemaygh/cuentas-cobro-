@@ -1,7 +1,7 @@
 import { formatCOP, formatFechaCorta, ESTADOS } from '../utils/formatters'
-import { FileDown, MessageCircle, ChevronRight } from 'lucide-react'
+import { FileDown, MessageCircle, Edit2, Trash2 } from 'lucide-react'
 
-export default function CuentaCard({ cuenta, onDescargarPDF, onWhatsApp, onCambiarEstado, onVerDetalle }) {
+export default function CuentaCard({ cuenta, onDescargarPDF, onWhatsApp, onCambiarEstado, onVerDetalle, onEliminar }) {
   const estado = ESTADOS[cuenta.estado] || ESTADOS.pendiente
 
   return (
@@ -63,8 +63,18 @@ export default function CuentaCard({ cuenta, onDescargarPDF, onWhatsApp, onCambi
           <button
             onClick={() => onVerDetalle(cuenta)}
             className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors"
+            title="Editar"
           >
-            <ChevronRight size={16} />
+            <Edit2 size={16} />
+          </button>
+        )}
+        {onEliminar && (
+          <button
+            onClick={() => onEliminar(cuenta)}
+            className="p-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-colors"
+            title="Eliminar"
+          >
+            <Trash2 size={16} />
           </button>
         )}
       </div>
